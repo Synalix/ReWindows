@@ -1,0 +1,119 @@
+<suki:SukiWindow xmlns="https://github.com/avaloniaui"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:suki="using:SukiUI.Controls"
+                 xmlns:vm="using:ReWindows.ViewModels"
+                 x:Class="ReWindows.Views.MainWindow"
+                 x:DataType="vm:MainWindowViewModel"
+                 Title="ReWindows"
+                 BackgroundAnimationEnabled="True"
+                 IsMenuVisible="True">
+
+    <suki:SukiWindow.Hosts>
+        <suki:SukiDialogHost Manager="{Binding DialogManager}"/>
+    </suki:SukiWindow.Hosts>
+
+    <suki:SukiWindow.Styles>
+        <Style Selector="suki|GlassCard.IsAppApplied">
+            <Setter Property="BorderBrush" Value="{DynamicResource SukiPrimaryColor}" />
+            <Setter Property="BorderThickness" Value="1.5" />
+        </Style>
+        <Style Selector="suki|GlassCard[IsEnabled=False]">
+            <Setter Property="Opacity" Value="0.4" />
+        </Style>
+    </suki:SukiWindow.Styles>
+
+    <suki:SukiSideMenu IsSearchEnabled="True" SearchText="{Binding SearchText}">
+        <suki:SukiSideMenu.HeaderContent>
+            <StackPanel Margin="20,30,20,10" Spacing="10">
+                <TextBlock Text="ReWindows" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"/>
+                
+                <DropDownButton Content="Selection" Classes="Flat" HorizontalAlignment="Center">
+                    <DropDownButton.Flyout>
+                        <MenuFlyout>
+                            <MenuItem Header="Select All" Command="{Binding GlobalSelectCommand}" CommandParameter="All" />
+                            <MenuItem Header="Deselect All" Command="{Binding GlobalSelectCommand}" CommandParameter="None" />
+                            <MenuItem Header="Select Safe" Command="{Binding GlobalSelectCommand}" CommandParameter="Safe" />
+                        </MenuFlyout>
+                    </DropDownButton.Flyout>
+                </DropDownButton>
+            </StackPanel>
+        </suki:SukiSideMenu.HeaderContent>
+
+        <suki:SukiSideMenu.Items>
+            <suki:SukiSideMenuItem Header="⚙️ System Tweaks">
+                <suki:SukiSideMenuItem.PageContent>
+                    <Grid RowDefinitions="Auto, *">
+                        <TextBlock Grid.Row="0" Text="System Optimization" FontSize="22" FontWeight="DemiBold" Margin="30,25" />
+                        <ScrollViewer Grid.Row="1">
+                            <ItemsControl ItemsSource="{Binding SystemTweaks}" Margin="20,0,20,20">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <StaticResource ResourceKey="TweakTemplate"/>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Grid>
+                </suki:SukiSideMenuItem.PageContent>
+            </suki:SukiSideMenuItem>
+
+            <suki:SukiSideMenuItem Header="🛡️ Privacy">
+                <suki:SukiSideMenuItem.PageContent>
+                    <Grid RowDefinitions="Auto, *">
+                        <TextBlock Grid.Row="0" Text="Privacy &amp; Telemetry" FontSize="22" FontWeight="DemiBold" Margin="30,25" />
+                        <ScrollViewer Grid.Row="1">
+                            <ItemsControl ItemsSource="{Binding PrivacyTweaks}" Margin="20,0,20,20">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate><WrapPanel Orientation="Horizontal"/></ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <StaticResource ResourceKey="TweakTemplate"/>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Grid>
+                </suki:SukiSideMenuItem.PageContent>
+            </suki:SukiSideMenuItem>
+
+            <suki:SukiSideMenuItem Header="🚀 Performance">
+                <suki:SukiSideMenuItem.PageContent>
+                    <Grid RowDefinitions="Auto, *">
+                        <TextBlock Grid.Row="0" Text="Performance Tuning" FontSize="22" FontWeight="DemiBold" Margin="30,25" />
+                        <ScrollViewer Grid.Row="1">
+                            <ItemsControl ItemsSource="{Binding PerformanceTweaks}" Margin="20,0,20,20">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate><WrapPanel Orientation="Horizontal"/></ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <StaticResource ResourceKey="TweakTemplate"/>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Grid>
+                </suki:SukiSideMenuItem.PageContent>
+            </suki:SukiSideMenuItem>
+        </suki:SukiSideMenu.Items>
+
+        <suki:SukiSideMenu.FooterContent>
+            <Button Content="Apply Optimization" Command="{Binding ApplyWithConfirmationCommand}" Classes="Accent" Margin="15" HorizontalAlignment="Stretch"/>
+        </suki:SukiSideMenu.FooterContent>
+    </suki:SukiSideMenu>
+
+    <suki:SukiWindow.Resources>
+        <DataTemplate x:Key="TweakTemplate" x:DataType="vm:Tweak">
+            <suki:GlassCard Classes.IsAppApplied="{Binding IsAppliedByApp}" IsEnabled="{Binding !IsAlreadyApplied}" Margin="8" Width="240" Height="110">
+                <Grid ColumnDefinitions="*, Auto">
+                    <StackPanel Spacing="4" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="13"/>
+                        <TextBlock Text="{Binding Safety}" FontSize="9" Opacity="0.5"/>
+                        <TextBlock Text="{Binding Description}" FontSize="10" TextWrapping="Wrap" MaxLines="2" Opacity="0.7"/>
+                    </StackPanel>
+                    <CheckBox Grid.Column="1" IsChecked="{Binding IsChecked}" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                </Grid>
+            </suki:GlassCard>
+        </DataTemplate>
+    </suki:SukiWindow.Resources>
+</suki:SukiWindow>
