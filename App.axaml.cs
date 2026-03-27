@@ -11,6 +11,12 @@ namespace ReWindows
 {
     public partial class App : Application
     {
+        private void ExitMenuItem_OnClick(object? sender, System.EventArgs e)
+        {
+            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+                desktop.Shutdown();
+        }
+
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
@@ -23,10 +29,7 @@ namespace ReWindows
                 // Avoid duplicate validations from both Avalonia and the CommunityToolkit. 
                 // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
                 DisableAvaloniaDataAnnotationValidation();
-                desktop.MainWindow = new MainWindow
-                {
-                    DataContext = new MainWindowViewModel(),
-                };
+                desktop.MainWindow = new MainWindow();
             }
 
             base.OnFrameworkInitializationCompleted();

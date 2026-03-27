@@ -15,26 +15,18 @@
     </Application.DataTemplates>
   
     <Application.Styles>
-        <sukiUi:SukiTheme ThemeColor="Blue"  /> 
+        <sukiUi:SukiTheme ThemeColor="Blue"/>
     </Application.Styles>
 
     <TrayIcon.Icons>
     <TrayIcons>
-      <TrayIcon Icon="/Assets/avalonia-logo.ico"
-                ToolTipText="Avalonia Tray Icon ToolTip">
-        <TrayIcon.Menu>
-          <NativeMenu>
-            <NativeMenuItem Header="Settings">
-              <NativeMenu>
-                <NativeMenuItem Header="Option 1" />
-                <NativeMenuItem Header="Option 2" />
-                <NativeMenuItemSeparator />
-                <NativeMenuItem Header="Option 3" />
-              </NativeMenu>
-            </NativeMenuItem>
-          </NativeMenu>
-        </TrayIcon.Menu>
-      </TrayIcon>
+        <TrayIcon Icon="/Assets/logo.ico" ToolTipText="ReWindows">
+            <TrayIcon.Menu>
+                <NativeMenu>
+                    <NativeMenuItem Header="Exit" Click="ExitMenuItem_OnClick"/>
+                </NativeMenu>
+            </TrayIcon.Menu>
+        </TrayIcon>
     </TrayIcons>
-  </TrayIcon.Icons>
+</TrayIcon.Icons>
 </Application>

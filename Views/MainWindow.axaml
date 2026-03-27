@@ -1,38 +1,81 @@
 <suki:SukiWindow xmlns="https://github.com/avaloniaui"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:suki="using:SukiUI.Controls"
+                 xmlns:sukiEnum="using:SukiUI.Enums"
                  xmlns:vm="using:ReWindows.ViewModels"
+                 xmlns:local="using:ReWindows"
                  x:Class="ReWindows.Views.MainWindow"
                  x:DataType="vm:MainWindowViewModel"
+                 Icon="/Assets/logo.ico"
                  Title="ReWindows"
                  BackgroundAnimationEnabled="True"
-                 IsMenuVisible="True">
+                 IsMenuVisible="False">
 
     <suki:SukiWindow.Hosts>
         <suki:SukiDialogHost Manager="{Binding DialogManager}"/>
     </suki:SukiWindow.Hosts>
 
-    <suki:SukiWindow.Styles>
-        <Style Selector="suki|GlassCard.IsAppApplied">
-            <Setter Property="BorderBrush" Value="{DynamicResource SukiPrimaryColor}" />
-            <Setter Property="BorderThickness" Value="1.5" />
-        </Style>
-        <Style Selector="suki|GlassCard[IsEnabled=False]">
-            <Setter Property="Opacity" Value="0.4" />
-        </Style>
-    </suki:SukiWindow.Styles>
 
-    <suki:SukiSideMenu IsSearchEnabled="True" SearchText="{Binding SearchText}">
+    <suki:SukiWindow.Resources>
+        <local:SafetyColorConverter x:Key="SafetyColorConverter"/>
+        
+        <local:InstalledColorConverter x:Key="InstalledColorConverter"/>
+        <local:InstalledTextConverter x:Key="InstalledTextConverter"/>
+
+        <DataTemplate x:Key="AppTemplate" x:DataType="vm:BloatApp">
+    <suki:GlassCard Margin="8" Width="240" Height="110">
+        <Grid RowDefinitions="Auto,*,Auto">
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center"/>
+                <CheckBox Grid.Column="1" IsChecked="{Binding IsChecked}" VerticalAlignment="Center"/>
+            </Grid>
+            <TextBlock Grid.Row="1" Text="{Binding Description}" FontSize="10.5"
+                       TextWrapping="Wrap" Opacity="0.7" Margin="0,4,0,6"/>
+            <Border Grid.Row="2" CornerRadius="4" Padding="6,2" HorizontalAlignment="Left"
+                    Background="{Binding IsInstalled, Converter={StaticResource InstalledColorConverter}}">
+                <TextBlock FontSize="9" FontWeight="SemiBold" Foreground="White"
+                           Text="{Binding IsInstalled, Converter={StaticResource InstalledTextConverter}}"/>
+            </Border>
+        </Grid>
+    </suki:GlassCard>
+</DataTemplate>
+
+        <DataTemplate x:Key="TweakTemplate" x:DataType="vm:Tweak">
+    <suki:GlassCard Margin="8" Width="240" Height="120">
+        <Grid RowDefinitions="Auto,*,Auto">
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="13" VerticalAlignment="Center"/>
+                <CheckBox Grid.Column="1" IsChecked="{Binding IsChecked}" VerticalAlignment="Center"/>
+            </Grid>
+            <TextBlock Grid.Row="1" Text="{Binding Description}" FontSize="10.5"
+                       TextWrapping="Wrap" Opacity="0.7" Margin="0,4,0,6"/>
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="6">
+                <Border CornerRadius="4" Padding="6,2"
+                        Background="{Binding Safety, Converter={StaticResource SafetyColorConverter}}">
+                    <TextBlock Text="{Binding Safety}" FontSize="9" FontWeight="SemiBold" Foreground="White"/>
+                </Border>
+                <Border CornerRadius="4" Padding="6,2"
+                        Background="#2a7a4f"
+                        IsVisible="{Binding IsApplied}">
+                    <TextBlock Text="Applied" FontSize="9" FontWeight="SemiBold" Foreground="White"/>
+                </Border>
+            </StackPanel>
+        </Grid>
+    </suki:GlassCard>
+</DataTemplate>
+    </suki:SukiWindow.Resources>
+
+    <suki:SukiSideMenu SelectedItem="{Binding SelectedPage}">
         <suki:SukiSideMenu.HeaderContent>
-            <StackPanel Margin="20,30,20,10" Spacing="10">
-                <TextBlock Text="ReWindows" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"/>
-                
-                <DropDownButton Content="Selection" Classes="Flat" HorizontalAlignment="Center">
+            <StackPanel Margin="16,28,16,8" Spacing="10">
+                <TextBlock Text="ReWindows" FontSize="17" FontWeight="Bold" HorizontalAlignment="Center"/>
+                <TextBox Text="{Binding SearchText}" Watermark="Search..." Classes="RoundedOutline"/>
+                <DropDownButton Content="Selection" Classes="Flat" HorizontalAlignment="Stretch">
                     <DropDownButton.Flyout>
                         <MenuFlyout>
-                            <MenuItem Header="Select All" Command="{Binding GlobalSelectCommand}" CommandParameter="All" />
-                            <MenuItem Header="Deselect All" Command="{Binding GlobalSelectCommand}" CommandParameter="None" />
-                            <MenuItem Header="Select Safe" Command="{Binding GlobalSelectCommand}" CommandParameter="Safe" />
+                            <MenuItem Header="Select All"   Command="{Binding GlobalSelectCommand}" CommandParameter="All"/>
+                            <MenuItem Header="Deselect All" Command="{Binding GlobalSelectCommand}" CommandParameter="None"/>
+                            <MenuItem Header="Select Safe"  Command="{Binding GlobalSelectCommand}" CommandParameter="Safe"/>
                         </MenuFlyout>
                     </DropDownButton.Flyout>
                 </DropDownButton>
@@ -40,16 +83,18 @@
         </suki:SukiSideMenu.HeaderContent>
 
         <suki:SukiSideMenu.Items>
-            <suki:SukiSideMenuItem Header="⚙️ System Tweaks">
+
+            <suki:SukiSideMenuItem Header="System Tweaks">
+                <suki:SukiSideMenuItem.Icon>
+                    <TextBlock Text="&#xE770;" FontFamily="Segoe MDL2 Assets" FontSize="16"/>
+                </suki:SukiSideMenuItem.Icon>
                 <suki:SukiSideMenuItem.PageContent>
-                    <Grid RowDefinitions="Auto, *">
-                        <TextBlock Grid.Row="0" Text="System Optimization" FontSize="22" FontWeight="DemiBold" Margin="30,25" />
+                    <Grid RowDefinitions="Auto,*">
+                        <TextBlock Grid.Row="0" Text="System Optimization" FontSize="22" FontWeight="DemiBold" Margin="30,25,30,10"/>
                         <ScrollViewer Grid.Row="1">
                             <ItemsControl ItemsSource="{Binding SystemTweaks}" Margin="20,0,20,20">
                                 <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <WrapPanel Orientation="Horizontal" />
-                                    </ItemsPanelTemplate>
+                                    <ItemsPanelTemplate><WrapPanel Orientation="Horizontal"/></ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
                                     <StaticResource ResourceKey="TweakTemplate"/>
@@ -60,10 +105,13 @@
                 </suki:SukiSideMenuItem.PageContent>
             </suki:SukiSideMenuItem>
 
-            <suki:SukiSideMenuItem Header="🛡️ Privacy">
+            <suki:SukiSideMenuItem Header="Privacy">
+                <suki:SukiSideMenuItem.Icon>
+                    <TextBlock Text="&#xE72E;" FontFamily="Segoe MDL2 Assets" FontSize="16"/>
+                </suki:SukiSideMenuItem.Icon>
                 <suki:SukiSideMenuItem.PageContent>
-                    <Grid RowDefinitions="Auto, *">
-                        <TextBlock Grid.Row="0" Text="Privacy &amp; Telemetry" FontSize="22" FontWeight="DemiBold" Margin="30,25" />
+                    <Grid RowDefinitions="Auto,*">
+                        <TextBlock Grid.Row="0" Text="Privacy &amp; Telemetry" FontSize="22" FontWeight="DemiBold" Margin="30,25,30,10"/>
                         <ScrollViewer Grid.Row="1">
                             <ItemsControl ItemsSource="{Binding PrivacyTweaks}" Margin="20,0,20,20">
                                 <ItemsControl.ItemsPanel>
@@ -78,10 +126,13 @@
                 </suki:SukiSideMenuItem.PageContent>
             </suki:SukiSideMenuItem>
 
-            <suki:SukiSideMenuItem Header="🚀 Performance">
+            <suki:SukiSideMenuItem Header="Performance">
+                <suki:SukiSideMenuItem.Icon>
+                    <TextBlock Text="&#xE945;" FontFamily="Segoe MDL2 Assets" FontSize="16"/>
+                </suki:SukiSideMenuItem.Icon>
                 <suki:SukiSideMenuItem.PageContent>
-                    <Grid RowDefinitions="Auto, *">
-                        <TextBlock Grid.Row="0" Text="Performance Tuning" FontSize="22" FontWeight="DemiBold" Margin="30,25" />
+                    <Grid RowDefinitions="Auto,*">
+                        <TextBlock Grid.Row="0" Text="Performance Tuning" FontSize="22" FontWeight="DemiBold" Margin="30,25,30,10"/>
                         <ScrollViewer Grid.Row="1">
                             <ItemsControl ItemsSource="{Binding PerformanceTweaks}" Margin="20,0,20,20">
                                 <ItemsControl.ItemsPanel>
@@ -95,25 +146,134 @@
                     </Grid>
                 </suki:SukiSideMenuItem.PageContent>
             </suki:SukiSideMenuItem>
+
+            <suki:SukiSideMenuItem Header="Debloat">
+    <suki:SukiSideMenuItem.Icon>
+        <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" FontSize="13"/>
+    </suki:SukiSideMenuItem.Icon>
+    <suki:SukiSideMenuItem.PageContent>
+        <Grid RowDefinitions="Auto,*">
+            <TextBlock Grid.Row="0" Text="Debloat" FontSize="22" FontWeight="DemiBold" Margin="30,25,30,10"/>
+            <ScrollViewer Grid.Row="1">
+                <StackPanel Margin="20,0,20,20" Spacing="20">
+
+                    <TextBlock Text="Microsoft Apps" FontSize="15" FontWeight="SemiBold" Margin="8,0"/>
+                    <ItemsControl ItemsSource="{Binding MicrosoftApps}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><WrapPanel Orientation="Horizontal"/></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <StaticResource ResourceKey="AppTemplate"/>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <TextBlock Text="AI Features" FontSize="15" FontWeight="SemiBold" Margin="8,0"/>
+                    <ItemsControl ItemsSource="{Binding AIApps}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><WrapPanel Orientation="Horizontal"/></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <StaticResource ResourceKey="AppTemplate"/>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <TextBlock Text="Games" FontSize="15" FontWeight="SemiBold" Margin="8,0"/>
+                    <ItemsControl ItemsSource="{Binding GameApps}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><WrapPanel Orientation="Horizontal"/></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <StaticResource ResourceKey="AppTemplate"/>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <TextBlock Text="Third Party" FontSize="15" FontWeight="SemiBold" Margin="8,0"/>
+                    <ItemsControl ItemsSource="{Binding ThirdPartyApps}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><WrapPanel Orientation="Horizontal"/></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <StaticResource ResourceKey="AppTemplate"/>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </suki:SukiSideMenuItem.PageContent>
+</suki:SukiSideMenuItem>
+
+            <suki:SukiSideMenuItem Header="Settings">
+                <suki:SukiSideMenuItem.Icon>
+                    <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="13"/>
+                </suki:SukiSideMenuItem.Icon>
+                <suki:SukiSideMenuItem.PageContent>
+                    <ScrollViewer>
+                        <StackPanel Margin="30,25" Spacing="16" MaxWidth="480" HorizontalAlignment="Left">
+                            <TextBlock Text="Appearance" FontSize="22" FontWeight="DemiBold"/>
+                            <suki:GlassCard>
+                                <StackPanel Spacing="12">
+                                    <TextBlock Text="Theme" FontWeight="SemiBold"/>
+                                    <ToggleSwitch IsChecked="{Binding Settings.IsDarkMode}"
+                                                 OnContent="Dark" OffContent="Light"/>                                  
+                                </StackPanel>
+                            </suki:GlassCard>
+                            <suki:GlassCard>
+                                <StackPanel Spacing="12">
+                                    <TextBlock Text="Background Style" FontWeight="SemiBold"/>
+                                    <TextBlock Text="Only visible in dark mode." FontSize="10" Opacity="0.4"/>
+                                    <WrapPanel Orientation="Horizontal">
+                                        <Button Content="Gradient"     Classes="Flat" Margin="0,0,6,6" Click="Background_OnClick" Tag="Gradient"/>
+                                        <Button Content="Bubble"       Classes="Flat" Margin="0,0,6,6" Click="Background_OnClick" Tag="Bubble"/>
+                                        <Button Content="Flat"         Classes="Flat" Margin="0,0,6,6" Click="Background_OnClick" Tag="Flat"/>
+                                        <Button Content="GradientSoft" Classes="Flat" Margin="0,0,6,6" Click="Background_OnClick" Tag="GradientSoft"/>
+                                    </WrapPanel>
+                                </StackPanel>
+                            </suki:GlassCard>
+                            <TextBlock Text="ReWindows v0.1.0"                                     
+                                       FontSize="10" Opacity="0.3"
+                                       HorizontalAlignment="Left"
+                                       Margin="4,8,0,0"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </suki:SukiSideMenuItem.PageContent>
+            </suki:SukiSideMenuItem>
+
         </suki:SukiSideMenu.Items>
 
         <suki:SukiSideMenu.FooterContent>
-            <Button Content="Apply Optimization" Command="{Binding ApplyWithConfirmationCommand}" Classes="Accent" Margin="15" HorizontalAlignment="Stretch"/>
+            <StackPanel Margin="12" Spacing="8">
+                <TextBlock Text="Not running as Administrator"
+                           FontSize="10" Opacity="0.4"
+                           HorizontalAlignment="Center"
+                           IsVisible="{Binding !IsAdmin}"/>
+                <Button Content="Apply Optimizations"
+                        Command="{Binding ApplyWithConfirmationCommand}"
+                        Classes="Accent"
+                        HorizontalAlignment="Stretch"
+                        IsVisible="{Binding IsOnTweaksPage}"/>
+                <Button Content="Revert Applied Tweaks"
+                        Command="{Binding RevertWithConfirmationCommand}"
+                        Classes="Flat"
+                        HorizontalAlignment="Stretch"
+                        IsVisible="{Binding IsOnTweaksPage}"/>
+                <Button Content="Remove Selected Apps"
+                        Command="{Binding RemoveAppsWithConfirmationCommand}"
+                        Classes="Accent"
+                        HorizontalAlignment="Stretch"
+                        IsVisible="{Binding IsOnDebloatPage}"/>
+                <Button Content="Reinstall Selected Apps"
+                        Command="{Binding ReinstallAppsWithConfirmationCommand}"
+                        Classes="Flat"
+                        HorizontalAlignment="Stretch"
+                        IsVisible="{Binding IsOnDebloatPage}"/>
+            </StackPanel>
         </suki:SukiSideMenu.FooterContent>
+
     </suki:SukiSideMenu>
 
-    <suki:SukiWindow.Resources>
-        <DataTemplate x:Key="TweakTemplate" x:DataType="vm:Tweak">
-            <suki:GlassCard Classes.IsAppApplied="{Binding IsAppliedByApp}" IsEnabled="{Binding !IsAlreadyApplied}" Margin="8" Width="240" Height="110">
-                <Grid ColumnDefinitions="*, Auto">
-                    <StackPanel Spacing="4" VerticalAlignment="Center">
-                        <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="13"/>
-                        <TextBlock Text="{Binding Safety}" FontSize="9" Opacity="0.5"/>
-                        <TextBlock Text="{Binding Description}" FontSize="10" TextWrapping="Wrap" MaxLines="2" Opacity="0.7"/>
-                    </StackPanel>
-                    <CheckBox Grid.Column="1" IsChecked="{Binding IsChecked}" VerticalAlignment="Center" Margin="10,0,0,0"/>
-                </Grid>
-            </suki:GlassCard>
-        </DataTemplate>
-    </suki:SukiWindow.Resources>
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
 </suki:SukiWindow>
