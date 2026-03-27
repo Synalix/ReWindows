@@ -1,0 +1,12 @@
+bin/
+obj/
+*.user
+*.suo
+.vs/
+.idea/
+**/publish/
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+AppData/
