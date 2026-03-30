@@ -1,0 +1,14 @@
+name: Version Check
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  version-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Synalix/dotnet-version-check@v1
+        with:
+          csproj-path: 'ReWindows/ReWindows.csproj'
