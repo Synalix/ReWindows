@@ -11,4 +11,4 @@ jobs:
       - uses: actions/checkout@v4
       - uses: Synalix/dotnet-version-check@v1
         with:
-          csproj-path: 'ReWindows/ReWindows.csproj'
+          csproj-path: 'ReWindows.csproj'
