@@ -10,7 +10,7 @@
     <SelfContained>true</SelfContained>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <PublishTrimmed>false</PublishTrimmed>
-    <InformationalVersion>0.1.0</InformationalVersion>
+    <InformationalVersion>0.1.1</InformationalVersion>
   </PropertyGroup>
 
   <ItemGroup>
