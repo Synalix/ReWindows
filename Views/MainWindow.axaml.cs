@@ -43,9 +43,9 @@ namespace ReWindows.Views
                 vm.Settings.IsDarkMode = true;
             }
 
-            BackgroundAnimationEnabled = true;
             BackgroundStyle = style;
             vm.Settings.BackgroundStyle = style;
+            BackgroundAnimationEnabled = true;
         }
     }
 }

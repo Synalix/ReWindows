@@ -72,7 +72,6 @@ namespace ReWindows.ViewModels
             OnPropertyChanged(nameof(AIApps));
             OnPropertyChanged(nameof(GameApps));
             OnPropertyChanged(nameof(ThirdPartyApps));
-            OnPropertyChanged(nameof(IsOnDebloatPage));
         }
 
         private IEnumerable<Tweak> FilterTweaks(string category)
@@ -145,9 +144,9 @@ namespace ReWindows.ViewModels
                     CheckAction  = () => RegistryHelper.GetDword(@"HKEY_CURRENT_USER\Software\Microsoft\Siuf\Rules", "NumberOfSIUFInPeriod", 1) == 0 },
 
                 new Tweak { Id = "animationsoff", Name = "Disable Animations", Description = "Turns off window animations for a snappier feel.", Category = "Performance", Safety = TweakSafety.Safe,
-                    RunAction    = () => RegistryHelper.SetDword(@"HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics", "MinAnimate", 0),
-                    RevertAction = () => RegistryHelper.SetDword(@"HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics", "MinAnimate", 1),
-                    CheckAction  = () => RegistryHelper.GetDword(@"HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics", "MinAnimate", 1) == 0 },
+                    RunAction    = () => RegistryHelper.SetString(@"HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics", "MinAnimate", "0"),
+                    RevertAction = () => RegistryHelper.SetString(@"HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics", "MinAnimate", "1"),
+                    CheckAction  = () => RegistryHelper.GetString(@"HKEY_CURRENT_USER\Control Panel\Desktop\WindowMetrics", "MinAnimate", "1") == "0" },
 
                 new Tweak { Id = "hibernation", Name = "Disable Hibernation", Description = "Frees up disk space by removing the hibernation file.", Category = "Performance", Safety = TweakSafety.Moderate,
                     RunAction    = () => RegistryHelper.SetDword(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power", "HibernateEnabled", 0),
