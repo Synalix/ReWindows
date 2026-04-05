@@ -45,6 +45,7 @@ namespace ReWindows.Views
 
             BackgroundStyle = style;
             vm.Settings.BackgroundStyle = style;
+            BackgroundAnimationEnabled = false;
             BackgroundAnimationEnabled = true;
         }
     }

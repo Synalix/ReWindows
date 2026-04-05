@@ -199,9 +199,9 @@ namespace ReWindows.ViewModels
                     CheckAction  = () => RegistryHelper.GetDword(@"HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Dsh", "AllowNewsAndInterests", 1) == 0 },
 
                 new Tweak { Id = "stickykeys", Name = "Disable Sticky Keys Prompt", Description = "Stops the Sticky Keys dialog from appearing when Shift is pressed 5 times.", Category = "System", Safety = TweakSafety.Safe,
-                    RunAction    = () => RegistryHelper.SetDword(@"HKEY_CURRENT_USER\Control Panel\Accessibility\StickyKeys", "Flags", 506),
-                    RevertAction = () => RegistryHelper.SetDword(@"HKEY_CURRENT_USER\Control Panel\Accessibility\StickyKeys", "Flags", 510),
-                    CheckAction  = () => RegistryHelper.GetDword(@"HKEY_CURRENT_USER\Control Panel\Accessibility\StickyKeys", "Flags", 510) == 506 },
+                    RunAction    = () => RegistryHelper.SetString(@"HKEY_CURRENT_USER\Control Panel\Accessibility\StickyKeys", "Flags", "506"),
+                    RevertAction = () => RegistryHelper.SetString(@"HKEY_CURRENT_USER\Control Panel\Accessibility\StickyKeys", "Flags", "510"),
+                    CheckAction  = () => RegistryHelper.GetString(@"HKEY_CURRENT_USER\Control Panel\Accessibility\StickyKeys", "Flags", "510") == "506" },
 
                 new Tweak { Id = "windowstips", Name = "Disable Windows Tips", Description = "Stops Windows from showing tips, tricks and suggestions on the lock screen and desktop.", Category = "System", Safety = TweakSafety.Safe,
                     RunAction    = () => RegistryHelper.SetDword(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager", "SoftLandingEnabled", 0),
@@ -212,6 +212,51 @@ namespace ReWindows.ViewModels
                     RunAction    = () => RegistryHelper.SetDword(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager", "RotatingLockScreenOverlayEnabled", 0),
                     RevertAction = () => RegistryHelper.SetDword(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager", "RotatingLockScreenOverlayEnabled", 1),
                     CheckAction  = () => RegistryHelper.GetDword(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager", "RotatingLockScreenOverlayEnabled", 1) == 0 },
+
+                new Tweak { Id = "autoplay", Name = "Disable AutoPlay", Description = "Stops Windows from automatically running programs when a USB drive or disc is inserted.", Category = "System", Safety = TweakSafety.Safe,
+                    RunAction    = () => RegistryHelper.SetDword(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer", "NoDriveTypeAutoRun", 255),
+                    RevertAction = () => RegistryHelper.SetDword(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer", "NoDriveTypeAutoRun", 145),
+                    CheckAction  = () => RegistryHelper.GetDword(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer", "NoDriveTypeAutoRun", 145) == 255 },
+
+                new Tweak { Id = "numlock", Name = "NumLock on at Startup", Description = "Enables NumLock automatically when Windows starts.", Category = "System", Safety = TweakSafety.Safe,
+                    RunAction    = () => RegistryHelper.SetString(@"HKEY_CURRENT_USER\Control Panel\Keyboard", "InitialKeyboardIndicators", "2"),
+                    RevertAction = () => RegistryHelper.SetString(@"HKEY_CURRENT_USER\Control Panel\Keyboard", "InitialKeyboardIndicators", "0"),
+                    CheckAction  = () => RegistryHelper.GetString(@"HKEY_CURRENT_USER\Control Panel\Keyboard", "InitialKeyboardIndicators", "0") == "2" },
+
+                new Tweak { Id = "noautoreboot", Name = "Prevent Update Auto-Reboot", Description = "Stops Windows from automatically restarting to apply updates while you are logged in.", Category = "System", Safety = TweakSafety.Safe,
+                    RunAction    = () => RegistryHelper.SetDword(@"HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU", "NoAutoRebootWithLoggedOnUsers", 1),
+                    RevertAction = () => RegistryHelper.SetDword(@"HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU", "NoAutoRebootWithLoggedOnUsers", 0),
+                    CheckAction  = () => RegistryHelper.GetDword(@"HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU", "NoAutoRebootWithLoggedOnUsers", 0) == 1 },
+
+                new Tweak { Id = "backgroundapps", Name = "Disable Background Apps", Description = "Prevents UWP apps from running or updating in the background.", Category = "Privacy", Safety = TweakSafety.Safe,
+                    RunAction    = () => RegistryHelper.SetDword(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications", "GlobalUserDisabled", 1),
+                    RevertAction = () => RegistryHelper.SetDword(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications", "GlobalUserDisabled", 0),
+                    CheckAction  = () => RegistryHelper.GetDword(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications", "GlobalUserDisabled", 0) == 1 },
+
+                new Tweak { Id = "remoteassistance", Name = "Disable Remote Assistance", Description = "Prevents others from connecting to your PC via Windows Remote Assistance.", Category = "Privacy", Safety = TweakSafety.Safe,
+                    RunAction    = () => RegistryHelper.SetDword(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Remote Assistance", "fAllowToGetHelp", 0),
+                    RevertAction = () => RegistryHelper.SetDword(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Remote Assistance", "fAllowToGetHelp", 1),
+                    CheckAction  = () => RegistryHelper.GetDword(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Remote Assistance", "fAllowToGetHelp", 1) == 0 },
+
+                new Tweak { Id = "cloudclipboard", Name = "Disable Cloud Clipboard Sync", Description = "Stops clipboard content from being synced to Microsoft's cloud across your devices.", Category = "Privacy", Safety = TweakSafety.Safe,
+                    RunAction    = () => RegistryHelper.SetDword(@"HKEY_CURRENT_USER\Software\Microsoft\Clipboard", "EnableCloudClipboard", 0),
+                    RevertAction = () => RegistryHelper.SetDword(@"HKEY_CURRENT_USER\Software\Microsoft\Clipboard", "EnableCloudClipboard", 1),
+                    CheckAction  = () => RegistryHelper.GetDword(@"HKEY_CURRENT_USER\Software\Microsoft\Clipboard", "EnableCloudClipboard", 1) == 0 },
+
+                new Tweak { Id = "sysmain", Name = "Disable SysMain", Description = "Stops the Superfetch service that preloads apps into RAM. Recommended on SSDs.", Category = "Performance", Safety = TweakSafety.Moderate,
+                    RunAction    = () => RegistryHelper.SetDword(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SysMain", "Start", 4),
+                    RevertAction = () => RegistryHelper.SetDword(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SysMain", "Start", 2),
+                    CheckAction  = () => RegistryHelper.GetDword(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SysMain", "Start", 2) == 4 },
+
+                new Tweak { Id = "searchindex", Name = "Disable Search Indexing", Description = "Stops Windows from indexing files in the background. Reduces disk usage, especially on HDDs.", Category = "Performance", Safety = TweakSafety.Moderate,
+                    RunAction    = () => RegistryHelper.SetDword(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WSearch", "Start", 4),
+                    RevertAction = () => RegistryHelper.SetDword(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WSearch", "Start", 2),
+                    CheckAction  = () => RegistryHelper.GetDword(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WSearch", "Start", 2) == 4 },
+
+                new Tweak { Id = "deliveryopt", Name = "Disable Delivery Optimization", Description = "Prevents Windows from using your bandwidth to upload updates to other PCs on the internet.", Category = "Performance", Safety = TweakSafety.Safe,
+                    RunAction    = () => RegistryHelper.SetDword(@"HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization", "DODownloadMode", 0),
+                    RevertAction = () => RegistryHelper.SetDword(@"HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization", "DODownloadMode", 1),
+                    CheckAction  = () => RegistryHelper.GetDword(@"HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization", "DODownloadMode", 1) == 0 },
             };
 
             foreach (var tweak in tweaks)
