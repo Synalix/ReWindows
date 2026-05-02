@@ -12,6 +12,7 @@ namespace ReWindows.ViewModels
         public AppCategory Category { get; set; }
         public string PackageName { get; set; } = "";
         public string WinGetId { get; set; } = "";
+        public string WingetSource { get; set; } = "";
 
         [ObservableProperty] private bool _isChecked;
         [ObservableProperty] private bool _isInstalled;

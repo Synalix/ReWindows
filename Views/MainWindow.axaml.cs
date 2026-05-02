@@ -32,7 +32,6 @@ namespace ReWindows.Views
             };
 
             if (tag == null) return;
-            if (!System.Enum.TryParse<SukiBackgroundStyle>(tag, out var style)) return;
 
             var vm = (MainWindowViewModel)DataContext!;
             var theme = SukiUI.SukiTheme.GetInstance();
@@ -43,8 +42,17 @@ namespace ReWindows.Views
                 vm.Settings.IsDarkMode = true;
             }
 
-            BackgroundStyle = style;
-            vm.Settings.BackgroundStyle = style;
+            if (System.Enum.TryParse<SukiBackgroundStyle>(tag, out var style))
+            {
+                BackgroundStyle = style;
+                vm.Settings.BackgroundStyle = style;
+            }
+            else if (tag == "GradientSoft")
+            {
+                BackgroundShaderFile = "gradientsoft";
+                vm.Settings.BackgroundStyle = SukiBackgroundStyle.Gradient;
+            }
+
             BackgroundAnimationEnabled = false;
             BackgroundAnimationEnabled = true;
         }

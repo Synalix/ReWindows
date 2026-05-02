@@ -20,9 +20,9 @@ A lightweight Windows optimization tool built with [Avalonia](https://avaloniaui
 ## Features
 
 - **Privacy** - disable telemetry, advertising ID, Cortana, activity history, location tracking, and more
-- **Performance** - disable transparency effects, animations, Game Bar, hibernation, and others
-- **System** - show file extensions and hidden files, disable Bing in Start, widgets, sticky keys, and more
-- **Debloat** - remove preinstalled Microsoft apps, AI Slop, Xbox components, and third party installs
+- **Performance** - disable transparency effects, animations, Game Bar, hibernation, OneDrive, driver updates, and others
+- **System** - show file extensions and hidden files, disable Bing in Start, widgets, shell clutter, sticky keys, and more
+- **Debloat** - remove preinstalled Microsoft slop, AI features, Xbox components, common Microsoft apps, and optional third-party installs
 - **Smart apply** - detects already applied tweaks and asks what you want to do about it
 - **Full revert** - every tweak can be undone, individually or all at once
 - **Saves your settings** - theme, background style, and applied state all persist between sessions
@@ -80,10 +80,10 @@ Settings and theme preferences are saved to `%AppData%\ReWindows\settings.json`.
 
 | Category | Count |
 |----------|-------|
-| Privacy | 10 |
-| System | 8 |
-| Performance | 6 |
-| Debloat | 11 |
+| Privacy | 15 |
+| System | 15 |
+| Performance | 12 |
+| Debloat | 19 |
 
 Safety ratings:
 
@@ -97,7 +97,7 @@ Safety ratings:
 
 - Creating a system restore point before applying tweaks is always a good idea
 - Some tweaks need a restart or sign-out to fully take effect
-- Debloat uses PowerShell's `Remove-AppxPackage` under the hood. Reinstalling uses winget
+- Debloat uses PowerShell's `Remove-AppxPackage` under the hood. Restoring uses winget with exact package IDs
 - ReWindows only touches registry keys and AppX packages, no system files
 
 ---

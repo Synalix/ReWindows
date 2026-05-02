@@ -13,19 +13,38 @@ namespace ReWindows
             return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
 
-        public static void RestartAsAdmin()
+        public static bool RestartAsAdmin()
         {
-            string exePath = Environment.ProcessPath ?? Process.GetCurrentProcess().MainModule!.FileName;
-
-            var startInfo = new ProcessStartInfo
+            string? exePath = Environment.ProcessPath;
+            if (string.IsNullOrEmpty(exePath))
             {
-                FileName = exePath,
-                UseShellExecute = true,
-                Verb = "runas"
-            };
+                var mainModule = Process.GetCurrentProcess().MainModule;
+                exePath = mainModule?.FileName;
+            }
 
-            Process.Start(startInfo);
-            Environment.Exit(0);
+            if (string.IsNullOrEmpty(exePath))
+                return false;
+
+            try
+            {
+                var startInfo = new ProcessStartInfo
+                {
+                    FileName = exePath,
+                    UseShellExecute = true,
+                    Verb = "runas"
+                };
+
+                var process = Process.Start(startInfo);
+                if (process is null)
+                    return false;
+
+                Environment.Exit(0);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

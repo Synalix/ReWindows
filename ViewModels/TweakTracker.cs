@@ -20,17 +20,28 @@ namespace ReWindows.ViewModels
 
         public static void SaveSettings(AppSettings settings)
         {
-            Directory.CreateDirectory(FolderPath);
-            File.WriteAllText(SettingsFile, JsonSerializer.Serialize(settings));
+            try
+            {
+                Directory.CreateDirectory(FolderPath);
+                File.WriteAllText(SettingsFile, JsonSerializer.Serialize(settings));
+            }
+            catch { }
         }
 
         public static AppSettings LoadSettings()
         {
-            if (!File.Exists(SettingsFile))
-                return new AppSettings();
+            try
+            {
+                if (!File.Exists(SettingsFile))
+                    return new AppSettings();
 
-            string json = File.ReadAllText(SettingsFile);
-            return JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
+                string json = File.ReadAllText(SettingsFile);
+                return JsonSerializer.Deserialize<AppSettings>(json) ?? new AppSettings();
+            }
+            catch
+            {
+                return new AppSettings();
+            }
         }
     }
 }

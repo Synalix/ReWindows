@@ -230,7 +230,7 @@
                                     </WrapPanel>
                                 </StackPanel>
                             </suki:GlassCard>
-                            <TextBlock Text="ReWindows v0.1.0"                                     
+                            <TextBlock Text="ReWindows v0.1.3"                                     
                                        FontSize="10" Opacity="0.3"
                                        HorizontalAlignment="Left"
                                        Margin="4,8,0,0"/>
@@ -262,7 +262,7 @@
                         Classes="Accent"
                         HorizontalAlignment="Stretch"
                         IsVisible="{Binding IsOnDebloatPage}"/>
-                <Button Content="Reinstall Selected Apps"
+                <Button Content="Restore Selected Apps"
                         Command="{Binding ReinstallAppsWithConfirmationCommand}"
                         Classes="Flat"
                         HorizontalAlignment="Stretch"
